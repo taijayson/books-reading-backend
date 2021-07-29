@@ -1,11 +1,11 @@
-const jwt = require("jsonwebtoken");
-const passport = require("passport");
-const GoogleStrategy = require("passport-google-oauth20").Strategy;
-const { ExtractJwt, Strategy } = require("passport-jwt");
-const { userService: services } = require("../services");
-const keys = require("./config-keys");
-const { User } = require("../models");
-require("dotenv").config();
+const jwt = require('jsonwebtoken');
+const passport = require('passport');
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const { ExtractJwt, Strategy } = require('passport-jwt');
+const { userService: services } = require('../services');
+const keys = require('./config-keys');
+const { User } = require('../models');
+require('dotenv').config();
 
 const { JWT_SECRET_KEY } = process.env;
 
@@ -18,17 +18,17 @@ const params = {
   clientID: keys.google.googleClientId,
   clientSecret: keys.google.googleClientKey,
   callbackURL:
-    "https://books-reading-backend.herokuapp.com/api/auth/google/redirect",
+    'https://books-reading-app.herokuapp.com/api/auth/google/redirect',
 };
 
 passport.use(
-  "jwt",
+  'jwt',
   new Strategy(settings, async (payload, done) => {
     try {
       const user = await services.getUserById(payload.id);
 
       if (!user) {
-        return done(new Error("User not found"));
+        return done(new Error('User not found'));
       }
 
       if (!user.token) {
@@ -43,7 +43,7 @@ passport.use(
 );
 
 passport.use(
-  "google",
+  'google',
   new GoogleStrategy(
     params,
     async (accessToken, refreshToken, profile, done) => {
@@ -51,7 +51,7 @@ passport.use(
         const newUser = {
           name: profile.displayName,
           email: profile.emails[0].value,
-          avatar: profile.photos[0].value.replace(/_normal/, ""),
+          avatar: profile.photos[0].value.replace(/_normal/, ''),
           googleId: profile.id,
         };
 
@@ -60,7 +60,7 @@ passport.use(
             const id = currentUser._id;
             const payload = { id };
             const token = jwt.sign(payload, JWT_SECRET_KEY, {
-              expiresIn: "16h",
+              expiresIn: '16h',
             });
 
             await services.updateToken(id, token);
@@ -75,7 +75,7 @@ passport.use(
             const id = result._id;
             const payload = { id };
             const token = jwt.sign(payload, JWT_SECRET_KEY, {
-              expiresIn: "16h",
+              expiresIn: '16h',
             });
 
             await services.updateToken(id, token);
