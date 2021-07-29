@@ -17,12 +17,7 @@ router.get('/current', useAuth, ctrl.getCurrent);
 router.get(
   '/google',
   passport.authenticate('google', {
-    scope: [
-      'openid',
-      'profile',
-      'email',
-      'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo#email https://www.googleapis.com/auth/plus.me https://www.googleapis.com/auth/tasks https://www-opensocial.googleusercontent.com/api/people https://www.googleapis.com/auth/plus.login',
-    ],
+    scope: ['openid', 'profile', 'email'],
   })
 );
 
